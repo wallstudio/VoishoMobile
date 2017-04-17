@@ -1,0 +1,10 @@
+/.build/
+/.vscode/
+/Lisece/
+/ImageToBinary/
+Audio/
+/audio/
+*.psd
+*.ai
+*.clip
+*.blend1
