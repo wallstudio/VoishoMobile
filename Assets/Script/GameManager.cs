@@ -58,7 +58,12 @@ public class GameManager : MonoBehaviour {
     int GFase = 0;
 
     // Use this for initialization
-    void Start () {
+    Toggle debugSwitch;
+    GameObject restartButton;
+    void Start() {
+        restartButton = GameObject.Find("Restart");
+        restartButton.SetActive(false);
+        debugSwitch = GameObject.Find("DebugSwitch").GetComponent<Toggle>();
         Title = GameObject.Find("TITLE").GetComponent<Text>();
         Left = GameObject.Find("LEFT").GetComponent<Text>();
         Center = GameObject.Find("CENTER").GetComponent<Text>();
@@ -85,8 +90,10 @@ public class GameManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (Dead) return;
-
+        if (Dead) {
+            
+            return;
+        }
         Hurt.TexNum = LifeData.Love;
         Life.TexNum = LifeData.Life;
         switch (GameState) {
@@ -107,6 +114,7 @@ public class GameManager : MonoBehaviour {
                 if (!Dead && LifeData.Life == 0) {
                     Play("Dead");
                     Dead = true;
+                    StartCoroutine(RestartMsg());
                 }
                 break;
             case State.MENU:
@@ -278,6 +286,11 @@ public class GameManager : MonoBehaviour {
                 }
                 break;
         }
+    }
+
+    IEnumerator RestartMsg() {
+        yield return new WaitForSeconds(3f);
+        restartButton.SetActive(true);
     }
 
     void ZSet(Transform dest, float z) {
@@ -619,7 +632,7 @@ public class GameManager : MonoBehaviour {
         int DIRTY_WEIGHT = 10;  // 1 .. 10
         int SICK_WAIGHT = 3;    // 1 .. 10
         for (;;) {
-            yield return new WaitForSeconds(min*60);
+            yield return new WaitForSeconds(min*60*LifeData.LifeInterval/2000);
 
             UnityEngine.Random.seed = (int)DateTime.Now.ToBinary();
             if (LifeData.Life == 0) {
@@ -678,8 +691,10 @@ public class GameManager : MonoBehaviour {
         }
     }
 
+    
 
     void OnGUI() {
+        if (!debugSwitch.isOn) return;
         int i = 13;
         int h = 30;
         GUIStyle gs = new GUIStyle();
