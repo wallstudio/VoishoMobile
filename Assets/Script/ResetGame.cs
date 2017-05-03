@@ -9,6 +9,10 @@ public class ResetGame : MonoBehaviour {
     public void Restart() {
 
         LifeData.Clear();
-        SceneManager.LoadScene("Main", LoadSceneMode.Single);
+#if UNITY_ANDROID
+        SceneManager.LoadScene("Android", LoadSceneMode.Single);
+#elif UNITY_STANDALONE_WIN
+        SceneManager.LoadScene("Windows", LoadSceneMode.Single);
+#endif
     }
 }
